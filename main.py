@@ -1,73 +1,33 @@
-from tornado.httpclient import AsyncHTTPClient
-from tornado.ioloop import IOLoop
-from tornado.web import Application, RequestHandler
-from tornado import gen
+import tornado.web
+import tornado.ioloop
 
-import opentracing
-from opentracing.scope_managers.tornado import TornadoScopeManager
-import tornado_opentracing
-
-
-def client_start_span_cb(span, request):
-    span.operation_name = 'client/%s' % request.method
-    span.set_tag('headers', request.headers)
-
-
-# Pass your OpenTracing-compatible tracer here
-# using TornadoScopeManager.
-tracing = tornado_opentracing.TornadoTracing(opentracing.tracer)
-
-# Since we are not doing a full tornado_opentracing.init_tracing(),
-# we need to manually call init_client_tracing() if we want to do
-# HTTP client tracing too.
-tornado_opentracing.init_client_tracing(
-    opentracing.tracer,
-    start_span_cb=client_start_span_cb
-)
-
-
-class ClientLogHandler(RequestHandler):
-    @tracing.trace()
-    @gen.coroutine
+class basicRequestHandler(tornado.web.RequestHandler):
     def get(self):
-        yield AsyncHTTPClient().fetch('http://127.0.0.1:8080/server/log')
-        self.write({'message': 'Sent a request to log'})
+        self.write("Hello, world!!!!!!")
 
+class resourceRequestHandler(tornado.web.RequestHandler):
+    def get(self, id):
+        self.write("Querying tweet with id " + id)
 
-class ClientChildSpanHandler(RequestHandler):
-    @tracing.trace()
-    @gen.coroutine
+class queryStringRequestHandler(tornado.web.RequestHandler):
     def get(self):
-        yield AsyncHTTPClient().fetch('http://127.0.0.1:8080/server/childspan')
-        self.write({
-            'message': 'Sent a request that should procude an additional child span'
-        })
+        n = int(self.get_argument("n"))
+        r = "odd" if n % 2 else "even"
+        
+        self.write("the number " + str(n) + " is " + r)
 
-
-class ServerLogHandler(RequestHandler):
-    @tracing.trace()
+class staticRequestHandler(tornado.web.RequestHandler):
     def get(self):
-        # Alternatively, TornadoTracing.get_span(self.request)
-        # can be used to fetch this request's Span.
-        tracing.tracer.active_span.log_event('Hello, world!')
-        self.write({})
+        self.render("index.html")
 
+if __name__ == "__main__":
+    app = tornado.web.Application([
+        (r"/", basicRequestHandler),
+        (r"/blog", staticRequestHandler),
+        (r"/isEven", queryStringRequestHandler),
+        (r"/tweet/([0-9]+)", resourceRequestHandler)
+    ])
 
-class ServerChildSpanHandler(RequestHandler):
-    @tracing.trace()
-    def get(self):
-        # Will implicitly be child of the incoming request Span.
-        with tracing.tracer.start_active_span('extra_child_span'):
-            self.write({})
-
-
-if __name__ == '__main__':
-    app = Application([
-            (r'/client/log', ClientLogHandler),
-            (r'/client/childspan', ClientChildSpanHandler),
-            (r'/server/log', ServerLogHandler),
-            (r'/server/childspan', ServerChildSpanHandler),
-        ],
-    )
-    app.listen(8080)
-    IOLoop.current().start()
+    app.listen(8881)
+    print("I'm listening on port 8881")
+    tornado.ioloop.IOLoop.current().start()
