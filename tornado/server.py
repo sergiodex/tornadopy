@@ -13,12 +13,12 @@ class queryStringRequestHandler(tornado.web.RequestHandler):
     def get(self):
         n = int(self.get_argument("n"))
         r = "odd" if n % 2 else "even"
-        
+
         self.write("the number " + str(n) + " is " + r)
 
 class staticRequestHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("login.html")
+        self.render("../login.html")
 
 if __name__ == "__main__":
     app = tornado.web.Application([
