@@ -18,12 +18,12 @@ class queryStringRequestHandler(tornado.web.RequestHandler):
 
 class staticRequestHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("index.html")
+        self.render("login.html")
 
 if __name__ == "__main__":
     app = tornado.web.Application([
         (r"/", basicRequestHandler),
-        (r"/blog", staticRequestHandler),
+        (r"/login", staticRequestHandler),
         (r"/isEven", queryStringRequestHandler),
         (r"/tweet/([0-9]+)", resourceRequestHandler)
     ])
