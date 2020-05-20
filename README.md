@@ -22,10 +22,10 @@ python3 main.py
         - --port 8080
     ```
 ## create virtual env
-- python3 -m venv /path/to/new/virtual/environment
+`python3 -m venv /path/to/new/virtual/environment`
 
-## create requeriments
--  pip3 freeze > requirements.txt
+## activate virtual env
+`source  /path/to/new/virtual/environment/bin/activate`
 
 ## install requeriments
-- pip install -r tornado/requirements.tx
+`pip install -r tornado/requirements.tx`
