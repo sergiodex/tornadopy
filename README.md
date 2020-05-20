@@ -15,9 +15,17 @@ next: Select File main.py
 
 #### run the server console
 ``` bash
-python3 main.py 
+python3 main.py
 ```
     `Options:`
     ``` bash
         - --port 8080
     ```
+## create virtual env
+- python3 -m venv /path/to/new/virtual/environment
+
+## create requeriments
+-  pip3 freeze > requirements.txt
+
+## install requeriments
+- pip install -r tornado/requirements.tx
