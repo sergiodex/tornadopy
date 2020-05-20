@@ -21,6 +21,7 @@ class staticRequestHandler(tornado.web.RequestHandler):
         self.render("login.html")
 
 if __name__ == "__main__":
+    tornado.options.define("static_path", default="web/build", help="Path to static file")
     app = tornado.web.Application([
         (r"/", basicRequestHandler),
         (r"/login", staticRequestHandler),
