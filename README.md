@@ -1,31 +1,27 @@
-#### tornadopy python 2.7
-``` bash
-pip install tornado
-```
+## Tornadopy python 2.7
+`pip install tornado`
 
-#### tornadopy python 3.7
-``` bash
-sudo apt-get install -y python3-tornado
-```
+## Tornadopy python 3.7
+`sudo apt-get install -y python3-tornado`
 
-#### visual Code Debugging
-install extension python
-next: Start Debugin
-next: Select File main.py
+## Visual Code Debugging
+    install extension python.
+    next: Start Debugin.
+    next: Select File main.py.
 
-#### run the server console
-``` bash
-python3 main.py
-```
-    `Options:`
-    ``` bash
-        - --port 8080
-    ```
-## create virtual env
+## Run the server console
+`python3 main.py`
+
+
+`options:`
+
+    --port 8080
+
+## Create virtual env
 `python3 -m venv /path/to/new/virtual/environment`
 
-## activate virtual env
+## Activate virtual env
 `source  /path/to/new/virtual/environment/bin/activate`
 
-## install requeriments
+## Install requeriments
 `pip install -r tornado/requirements.tx`
