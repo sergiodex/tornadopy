@@ -1,31 +1,59 @@
 import tornado.web
 import tornado.ioloop
+import tornado.autoreload
 
-class basicRequestHandler(tornado.web.RequestHandler):
+class HomeRequestHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write("Hello, world!!!!!!")
+        self.render("web/dist/index.html")
 
-class resourceRequestHandler(tornado.web.RequestHandler):
-    def get(self, id):
-        self.write("Querying tweet with id " + id)
-
-class queryStringRequestHandler(tornado.web.RequestHandler):
+class AdminRequestHandler(tornado.web.RequestHandler):
     def get(self):
-        n = int(self.get_argument("n"))
-        r = "odd" if n % 2 else "even"
+        self.render("web/dist/admin.html")
 
-        self.write("the number " + str(n) + " is " + r)
-
-class staticRequestHandler(tornado.web.RequestHandler):
+class FrPortalRequestHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("../login.html")
+        self.render("web/dist/frPortal.html")
+
+class LoginRequestHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("web/dist/login.html")
+
+class LoginStoreRequestHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("web/dist/loginStore.html")
+
+class ManageUsersRequestHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("web/dist/loginStore.html")
+
+class StatsRequestHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("web/dist/stats.html")
 
 if __name__ == "__main__":
+
+    public_static_paths = [
+        'index.html',
+        'admin.html',
+        'frPortal.html',
+        'login.html',
+        'loginStore.html',
+        'manageUsers.html',
+        'stats.html',
+    ]
+
+    tornado.autoreload.start()
+    for path in public_static_paths:
+        tornado.autoreload.watch("web/dist/" + path)
+
     app = tornado.web.Application([
-        (r"/", basicRequestHandler),
-        (r"/login", staticRequestHandler),
-        (r"/isEven", queryStringRequestHandler),
-        (r"/tweet/([0-9]+)", resourceRequestHandler)
+        (r"/", HomeRequestHandler),
+        (r"/admin", AdminRequestHandler),
+        (r"/frPortal", FrPortalRequestHandler),
+        (r"/login", LoginRequestHandler),
+        (r"/loginStore", LoginStoreRequestHandler),
+        (r"/manageUsers", ManageUsersRequestHandler),
+        (r"/stats", StatsRequestHandler)
     ])
 
     app.listen(8881)
